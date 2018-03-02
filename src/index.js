@@ -24,7 +24,7 @@ function getZerosCount(number, base) {
   
   // ... and an array implementation of modified base
   let Base = [];
-  let baseIsSimple;
+  let baseIsSimple = false;
     
   // Temporary base of simples that are not larger than base
   let neededSimples = [];
@@ -32,25 +32,20 @@ function getZerosCount(number, base) {
     if (simples[i] > base) {
       break;
     } else if (simples[i] === base) {
-      baseIsSimple = base;
+      baseIsSimple = true;
       neededSimples = [];
+      break;
     } else {
       neededSimples.push(simples[i]);
     }
   }
   
-  // Set the pows of these simples,
-  // as they are needed, they gonna be iterated
-  let pows = [];
-  for (x in neededSimples) {
-    pows.push(0);
-  }
-  
   // Getting simple integers the base consists of, 
   // and the pows of these integers  
-  function baseToSimples(tmp, s, pow) {
+  function baseToSimples(tmp, s) {
+    let pow = 0;
     while (tmp % s === 0) {
-      tmp = tmp / s;
+      tmp /= s;
       pow++;      
     }
     Base.push([s, pow]);
@@ -59,12 +54,12 @@ function getZerosCount(number, base) {
     return tmp;
   }
   
-  if (base !== baseIsSimple) {
+  if (baseIsSimple === false) {
     for (let i = neededSimples.length - 1; i > -1; i--) {
       console.log(neededSimples[i]);
       console.log(temp % neededSimples[i]);
       if (temp % neededSimples[i] === 0) {
-        baseToSimples(temp, neededSimples[i], pows[i]);      
+        baseToSimples(temp, neededSimples[i]);      
       }
     }
   } else {
@@ -74,7 +69,8 @@ function getZerosCount(number, base) {
   // Checking the divisibility
   let Num = new Array(number);
   
-  let sumOfDivisions = [];
+  let sums = new Array(Base.length);
+//  sums.push(new Array(Base.length));
     
   for (let i = 2; i <= Num.length; i++) {
     let tmp = i;
@@ -86,12 +82,19 @@ function getZerosCount(number, base) {
         tmp /= Base[j][1];
         sum++
       }
-      sumOfDivisions.push(sum);
+      sums[j] = sum;
     }
   }
 
-  let tmp = sumOfDivisions[0] / Base[0][1];
+  let result = sums[0] / Base[0][1];
+  for (let i = 0; i < Base.length; i++) {
+    result = Math.min(result, (sums[i] / Base[i][1]));
+  }
+  
   
   console.log(counter + 'ms');
+  console.log(result);
+  
+  return result;
   
 }

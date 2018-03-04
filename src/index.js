@@ -54,7 +54,7 @@ module.exports = function getZerosCount(number, base) {
   } else {
     Base.push([base, 1]);
   }
-  
+  /*
   // Checking the divisibility
   let Num = new Array(number);
   
@@ -67,7 +67,7 @@ module.exports = function getZerosCount(number, base) {
       let sum = 0;
       while(tmp % Base[j][0] === 0) {
         tmp = Math.floor(tmp / Base[j][0]);
-        sum++
+        sum++;
       }
       sums[j] += sum;
     }
@@ -78,10 +78,20 @@ module.exports = function getZerosCount(number, base) {
     result = Math.floor(Math.min(result, (sums[i] / Base[i][1])));
   }
   
+  */
   
+  let tempResultArray = [];
+  let result = 0;
   
-  console.log(result);
+  for (let i = 0; i < Base.length; i++) {
+    for (let j = 1; (number / Math.pow(Base[i][0], j)) > 1; j++) {
+      result += Math.floor((number / Math.pow(Base[i][0], j)));
+    }
+    tempResultArray.push(Math.floor(result / Base[i][1]));
+    result = 0;
+  }
+  console.log(Math.min(...tempResultArray));
   
-  return result;
+  return Math.min(...tempResultArray);
   
 }
